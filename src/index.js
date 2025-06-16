@@ -15,11 +15,11 @@ app.use('/api/users', userRoutes);
 app.use('/api/auth', authRoutes);
 
 app.get('/', (req, res) => {
-    res.send('Api Marvel funcionando!');
+    res.send('Marvel API up and running!');
 });
 
 app.listen(PORT, () => {
-    console.log(`Servidor corriendo en puerto ${PORT}`);
+    console.log(`Server running on port ${PORT}`);
 })
 
 async function testConnection() {
