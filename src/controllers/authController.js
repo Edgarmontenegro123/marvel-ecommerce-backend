@@ -1,3 +1,4 @@
+/*
 import {query} from '../config/db.js';
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
@@ -21,5 +22,35 @@ export async function loginUser(req, res) {
     } catch (err) {
         console.error(err);
         res.status(500).json({error: 'DB error'});
+    }
+}*/
+
+// Working with classes
+
+import AuthService from '../services/authService.js';
+
+export default class AuthController {
+    constructor() {
+        this.authService = new AuthService();
+        this.register = this.register.bind(this);
+        this.login = this.login.bind(this);
+    }
+
+    async register(req, res) {
+        try {
+            await this.authService.register(req.body);
+            res.status(201).json({message: 'User created successfully.'});
+        } catch (err) {
+            res.status(400).json({message: err.message});
+        }
+    }
+
+    async login(req, res) {
+        try {
+            const token = await this.authService.login(req.body);
+            res.status(200).json({token});
+        } catch (err) {
+            res.status(401).json({message: err.message});
+        }
     }
 }

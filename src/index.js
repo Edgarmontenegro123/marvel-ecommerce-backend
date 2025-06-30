@@ -1,7 +1,7 @@
 import express from 'express';
+import db from './config/db.js';
 import cors from 'cors';
 import dotenv from 'dotenv';
-import pool from './config/db.js';
 import userRoutes from './routes/userRoutes.js';
 import authRoutes from './routes/authRoutes.js';
 import favouriteRoutes from './routes/favouriteRoutes.js';
@@ -28,9 +28,9 @@ app.listen(PORT, () => {
 
 async function testConnection() {
     try {
-        const conn = await pool.getConnection();
+        const conn = await db.pool.getConnection();
         console.log('Connected to MariaDB');
-        conn.release();
+        await conn.release();
     } catch (err) {
         console.error ('Error connecting to MariaDB: ', err)
     }

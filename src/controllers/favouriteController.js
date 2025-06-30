@@ -1,3 +1,4 @@
+/*
 import {query} from '../config/db.js';
 
 export async function addFavourite(req, res) {
@@ -41,5 +42,52 @@ export async function deleteFavourite(req, res) {
         res.json({message: 'Favourite deleted'});
     } catch (err) {
         res.status(500).json({message: 'DB error'});
+    }
+}*/
+
+import FavouriteService from '../services/favouriteService.js';
+
+export default class FavouriteController {
+    constructor() {
+        this.favouriteService = new FavouriteService();
+
+        this.addFavourite = this.addFavourite.bind(this);
+        this.getFavourites = this.getFavourites.bind(this);
+        this.removeFavourite = this.removeFavourite.bind(this);
+    }
+
+    async addFavourite(req, res) {
+        const {marvelId, type, name, thumbnail} = req.body;
+        const userId = req.user.id;
+
+        try {
+            const fav = await this.favouriteService.addFavourite({userId, marvelId, type, name, thumbnail});
+            res.status(201).json(fav);
+        } catch (err) {
+            res.status(500).json({error: err.message});
+        }
+    }
+
+    async getFavourites(req, res) {
+        const userId = req.user.id;
+
+        try {
+            const favs = await this.favouriteService.getFavouritesByUser(userId);
+            res.status(200).json(favs);
+        } catch (err) {
+            res.status(500).json({error: err.message});
+        }
+    }
+
+    async removeFavourite(req, res) {
+        const {marvelId} = req.params;
+        const userId = req.user.id;
+
+        try {
+            await this.favouriteService.removeFavourite({userId, marvelId});
+            res.status(200).json({message: 'Favourite removed successfully.'});
+        } catch(err) {
+            res.status(500).json({error: err.message});
+        }
     }
 }
